@@ -3,10 +3,11 @@ import { Button, Form, Input } from "antd";
 
 const salt = "$2b$10$hUEOR7lmVAeLyYN8PiDxBO";
 
-export default function Login() {
+export default function Login({ setToken }) {
   const handleLogin = ({ email, password }) => {
     console.log(email, password);
     const hash = bcrypt.hashSync(password, salt);
+    console.log(hash);
     fetch("http://localhost:5050/login", {
       method: "POST",
       headers: {
@@ -21,7 +22,8 @@ export default function Login() {
           return;
         }
         console.log(data.token);
-        // do more...
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
       })
       .catch((err) => console.log(err));
   };
@@ -36,6 +38,9 @@ export default function Login() {
       >
         <Form.Item name="email" label="Email">
           <Input />
+        </Form.Item>
+        <Form.Item name="password" label="Password">
+          <Input.Password />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
           <Button type="primary" htmlType="submit">
